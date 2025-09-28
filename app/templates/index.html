@@ -1,11 +1,338 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Página Principal</title>
-</head>
-<body>
-    <h1>Bem-vindo à Aplicação Flask!</h1>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Email Classifier - Classifique seus emails com Inteligência Artificial{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="jumbotron bg-primary text-white rounded-3 p-5 mb-4">
+            <div class="container-fluid py-4">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <h1 class="display-4 fw-bold">
+                            <i class="bi bi-robot"></i> Email Classifier
+                        </h1>
+                        <p class="fs-4 mb-4">
+                            Classifique automaticamente seus emails como <strong>Produtivos</strong> ou <strong>Improdutivos</strong> 
+                            usando Inteligência Artificial avançada e receba sugestões de resposta personalizadas.
+                        </p>
+                        <div class="d-flex gap-3 flex-wrap">
+                            <a href="{{ url_for('auth.login') }}" class="btn btn-light btn-lg px-4">
+                                <i class="bi bi-box-arrow-in-right"></i> Fazer Login
+                            </a>
+                            <a href="{{ url_for('auth.register') }}" class="btn btn-outline-light btn-lg px-4">
+                                <i class="bi bi-person-plus"></i> Criar Conta
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 text-center">
+                        <i class="bi bi-envelope-check display-1 opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <h2 class="text-center mb-5">
+            <i class="bi bi-stars"></i> Principais Funcionalidades
+        </h2>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="bi bi-cpu fs-1 text-white"></i>
+            </div>
+            <h5 class="card-title text-center">Classificação Inteligente</h5>
+            <p class="card-text text-center">
+                Use modelos de IA avançados para classificar automaticamente emails como 
+                produtivos ou improdutivos com alta precisão.
+            </p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="bi bi-file-earmark-text fs-1 text-white"></i>
+            </div>
+            <h5 class="card-title text-center">Suporte a Múltiplos Formatos</h5>
+            <p class="card-text text-center">
+                Carregue emails em formato texto (.txt) ou PDF (.pdf) diretamente, 
+                ou cole o conteúdo manualmente no formulário.
+            </p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="bi bi-chat-dots fs-1 text-white"></i>
+            </div>
+            <h5 class="card-title text-center">Respostas Sugeridas</h5>
+            <p class="card-text text-center">
+                Receba sugestões automáticas de resposta personalizadas para cada email 
+                classificado, economizando tempo e esforço.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- How it Works Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <h2 class="text-center mb-5">
+            <i class="bi bi-gear"></i> Como Funciona
+        </h2>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <div class="card step-card border-primary">
+            <div class="step-number">1</div>
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-person-plus"></i> Faça Login ou Crie sua Conta
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    Primeiro, você precisa criar uma conta ou fazer login no sistema. 
+                    Seus dados ficam seguros e suas classificações são salvas para consulta posterior.
+                </p>
+                <div class="screenshot-placeholder">
+                    <i class="bi bi-person-circle me-2"></i>
+                    Interface de Login Segura
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <div class="card step-card border-success">
+            <div class="step-number">2</div>
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-upload"></i> Envie seu Email
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    Cole o conteúdo do email no formulário ou carregue um arquivo .txt ou .pdf. 
+                    O sistema processará automaticamente o conteúdo.
+                </p>
+                <div class="screenshot-placeholder">
+                    <i class="bi bi-file-earmark-arrow-up me-2"></i>
+                    Formulário de Upload
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <div class="card step-card border-info">
+            <div class="step-number">3</div>
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-robot"></i> IA Classifica o Email
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    Nossa IA analisa o conteúdo e classifica como "Produtivo" ou "Improdutivo" 
+                    baseado em padrões de linguagem e contexto.
+                </p>
+                <div class="screenshot-placeholder">
+                    <i class="bi bi-brain me-2"></i>
+                    Processamento por IA
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <div class="card step-card border-warning">
+            <div class="step-number">4</div>
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">
+                    <i class="bi bi-check-circle"></i> Receba Resultados e Sugestões
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    Veja a classificação do email e uma sugestão de resposta personalizada. 
+                    Todos os resultados ficam salvos em seu histórico.
+                </p>
+                <div class="screenshot-placeholder">
+                    <i class="bi bi-clipboard-check me-2"></i>
+                    Resultados e Histórico
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Demo Screenshots Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <h2 class="text-center mb-5">
+            <i class="bi bi-images"></i> Interface do Sistema
+        </h2>
+    </div>
+    <div class="col-lg-4 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <div class="bg-primary p-4 rounded mb-3">
+                    <i class="bi bi-speedometer2 display-4 text-white"></i>
+                </div>
+                <h5 class="card-title">Dashboard Principal</h5>
+                <p class="card-text">
+                    Interface limpa e intuitiva para classificar emails com formulário fácil de usar 
+                    e histórico completo de todas as classificações.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <div class="bg-success p-4 rounded mb-3">
+                    <i class="bi bi-table display-4 text-white"></i>
+                </div>
+                <h5 class="card-title">Histórico Detalhado</h5>
+                <p class="card-text">
+                    Tabela responsiva com todas as classificações, timestamps, categorias 
+                    e links para visualizar respostas completas.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <div class="bg-info p-4 rounded mb-3">
+                    <i class="bi bi-eye display-4 text-white"></i>
+                </div>
+                <h5 class="card-title">Visualização Completa</h5>
+                <p class="card-text">
+                    Página dedicada para ver todos os detalhes da classificação, 
+                    incluindo conteúdo completo e resposta sugerida.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Benefits Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card bg-light border-0">
+            <div class="card-body p-5">
+                <h2 class="text-center mb-4">
+                    <i class="bi bi-trophy"></i> Por que Usar o Email Classifier?
+                </h2>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-check-circle-fill text-success fs-4 me-3 mt-1"></i>
+                            <div>
+                                <h5>Economize Tempo</h5>
+                                <p class="mb-0">Classifique emails instantaneamente sem precisar ler todo o conteúdo.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-check-circle-fill text-success fs-4 me-3 mt-1"></i>
+                            <div>
+                                <h5>Melhore a Produtividade</h5>
+                                <p class="mb-0">Foque apenas em emails realmente importantes e produtivos.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-check-circle-fill text-success fs-4 me-3 mt-1"></i>
+                            <div>
+                                <h5>Respostas Inteligentes</h5>
+                                <p class="mb-0">Receba sugestões de resposta personalizadas para cada email.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-check-circle-fill text-success fs-4 me-3 mt-1"></i>
+                            <div>
+                                <h5>Seguro e Privado</h5>
+                                <p class="mb-0">Seus dados ficam seguros e protegidos em nossa plataforma.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="cta-section text-center text-white p-5 rounded-3 position-relative">
+            <div class="position-relative" style="z-index: 2;">
+                <h3 class="mb-3 pulse-animation">🚀 Pronto para começar?</h3>
+                <p class="fs-5 mb-4">
+                    Crie sua conta gratuita e comece a classificar seus emails com inteligência artificial hoje mesmo!
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg px-5 btn-gradient">
+                        <i class="bi bi-person-plus"></i> Criar Conta Grátis
+                    </a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg px-5">
+                        <i class="bi bi-box-arrow-in-right"></i> Já tenho conta
+                    </a>
+                </div>
+                <div class="mt-4">
+                    <small class="text-white-50">✨ 100% Gratuito • Sem cartão de crédito • Setup instantâneo</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Technical Info -->
+<div class="row">
+    <div class="col-12">
+        <div class="card border-0 bg-dark text-white">
+            <div class="card-body text-center p-4">
+                <h5 class="card-title mb-4">
+                    <i class="bi bi-cpu-fill"></i> Tecnologia de Ponta
+                </h5>
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    <span class="tech-badge">
+                        <i class="bi bi-robot"></i> Hugging Face Transformers
+                    </span>
+                    <span class="tech-badge">
+                        <i class="bi bi-database"></i> PostgreSQL
+                    </span>
+                    <span class="tech-badge">
+                        <i class="bi bi-server"></i> Flask Framework
+                    </span>
+                    <span class="tech-badge">
+                        <i class="bi bi-bootstrap"></i> Bootstrap 5
+                    </span>
+                    <span class="tech-badge">
+                        <i class="bi bi-shield-check"></i> Flask-Login
+                    </span>
+                    <span class="tech-badge">
+                        <i class="bi bi-cloud"></i> Cloud Ready
+                    </span>
+                </div>
+                <p class="mt-3 mb-0 text-white-50">
+                    <small>Arquitetura moderna e escalável para máxima performance</small>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+{% endblock %}

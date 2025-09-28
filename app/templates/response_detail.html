@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css">
+    <title>Detalhes da Classificação - Email Classifier</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('main.index') }}">Email Classifier</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="{{ url_for('main.dashboard') }}">Dashboard</a>
+                <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12">
+                <!-- Botão de voltar -->
+                <div class="mb-3">
+                    <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Voltar ao Dashboard
+                    </a>
+                </div>
+                
+                <!-- Card principal com detalhes -->
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">
+                            <i class="bi bi-envelope"></i> Detalhes da Classificação
+                        </h4>
+                        <small>Classificado em {{ classification.timestamp.strftime('%d/%m/%Y às %H:%M') }}</small>
+                    </div>
+                    <div class="card-body">
+                        <!-- Informações da classificação -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h6 class="text-muted">CATEGORIA</h6>
+                                <span class="badge fs-6 bg-{{ 'success' if classification.category == 'Produtivo' else 'warning' }}">
+                                    {{ classification.category }}
+                                </span>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-muted">ID DA CLASSIFICAÇÃO</h6>
+                                <span class="text-monospace">#{{ classification.id }}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Conteúdo do email -->
+                        <div class="mb-4">
+                            <h5 class="text-primary">
+                                <i class="bi bi-file-text"></i> Conteúdo do Email
+                            </h5>
+                            <div class="border rounded p-3 bg-light">
+                                <pre class="mb-0" style="white-space: pre-wrap; font-family: inherit;">{{ classification.content }}</pre>
+                            </div>
+                        </div>
+                        
+                        <!-- Resposta sugerida -->
+                        <div class="mb-4">
+                            <h5 class="text-success">
+                                <i class="bi bi-robot"></i> Resposta Sugerida pela IA
+                            </h5>
+                            <div class="border rounded p-3 bg-success bg-opacity-10">
+                                <pre class="mb-0" style="white-space: pre-wrap; font-family: inherit;">{{ classification.suggested_response }}</pre>
+                            </div>
+                        </div>
+                        
+                        <!-- Botões de ação -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <button class="btn btn-outline-primary" onclick="copyToClipboard('suggested-response')">
+                                    <i class="bi bi-clipboard"></i> Copiar Resposta
+                                </button>
+                                <button class="btn btn-outline-secondary" onclick="copyToClipboard('email-content')">
+                                    <i class="bi bi-clipboard"></i> Copiar Email
+                                </button>
+                            </div>
+                            <div>
+                                <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">
+                                    <i class="bi bi-house"></i> Voltar ao Dashboard
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hidden elements for copying -->
+    <textarea id="suggested-response" style="position: absolute; left: -9999px;">{{ classification.suggested_response }}</textarea>
+    <textarea id="email-content" style="position: absolute; left: -9999px;">{{ classification.content }}</textarea>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            element.select();
+            element.setSelectionRange(0, 99999); // Para mobile
+            
+            try {
+                document.execCommand('copy');
+                // Feedback visual
+                const button = event.target.closest('button');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="bi bi-check"></i> Copiado!';
+                button.classList.remove('btn-outline-primary', 'btn-outline-secondary');
+                button.classList.add('btn-success');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('btn-success');
+                    button.classList.add(elementId === 'suggested-response' ? 'btn-outline-primary' : 'btn-outline-secondary');
+                }, 2000);
+            } catch (err) {
+                console.error('Erro ao copiar: ', err);
+                alert('Erro ao copiar para a área de transferência');
+            }
+        }
+    </script>
+</body>
+</html>

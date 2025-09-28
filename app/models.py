@@ -1,6 +1,7 @@
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from datetime import datetime
 
 # Cria User: colunas id (chave primária), usuário (não nulo), email (não nulo) e password_hash (não nulo)
 class User(UserMixin, db.Model):
@@ -28,6 +29,7 @@ class EmailClassification(db.Model):
     category = db.Column(db.String(64), nullable=False)
     suggested_response = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
     user = db.relationship('User', backref=db.backref('email_classifications', lazy=True))
     def __repr__(self):

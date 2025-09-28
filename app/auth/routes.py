@@ -1,13 +1,10 @@
 
 from flask import Blueprint, request, jsonify, redirect, url_for, flash, render_template
-from flask_cors import CORS
 from flask_login import current_user, login_user, logout_user
 from app.auth.forms import RegistrationForm, LoginForm
 from app.models import User
 from app import db
-
-
-auth = Blueprint('auth', __name__)
+from . import auth
 
 # Cria a rota /register que terá a lógica para GET (apenas mostra o formulário de registro) e POST (valida o formulário, cria um novo objeto User, usa o método set_password e o salva no banco de dados).
 @auth.route('/register', methods=['GET', 'POST'])

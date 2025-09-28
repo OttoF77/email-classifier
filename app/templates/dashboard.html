@@ -1,25 +1,16 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css">
-    <title>Dashboard - Classificador de Emails</title>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url_for('main.index') }}">Email Classifier</a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
-            </div>
-        </div>
-    </nav>
-    
-    <div class="container mt-5">
-        <h1>Dashboard</h1>
-        <p>Bem-vindo ao sistema de classificação de emails!</p>
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Email Classifier{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-5">
+            <i class="bi bi-speedometer2"></i> Dashboard
+        </h1>
+        <p class="lead text-muted">Bem-vindo ao sistema de classificação de emails!</p>
+    </div>
+</div>
         
         <div class="row">
             <div class="col-md-8">
@@ -28,14 +19,29 @@
                         <h5>Classificar Email</h5>
                     </div>
                     <div class="card-body">
-                        <form method="POST" novalidate>
+                        <form method="POST" enctype="multipart/form-data" novalidate>
                             {{ form.hidden_tag() }}
                             <div class="mb-3">
                                 {{ form.content.label(class="form-label") }}
-                                {{ form.content(class="form-control", rows="8", placeholder="Cole o conteúdo do email aqui...") }}
+                                {{ form.content(class="form-control", rows="6", placeholder="Cole o conteúdo do email aqui...") }}
                                 {% for error in form.content.errors %}
                                     <div class="alert alert-danger mt-2">{{ error }}</div>
                                 {% endfor %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="text-center my-3">
+                                    <span class="badge bg-secondary">OU</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form.file.label(class="form-label") }}
+                                {{ form.file(class="form-control", accept=".txt,.pdf") }}
+                                {% for error in form.file.errors %}
+                                    <div class="alert alert-danger mt-2">{{ error }}</div>
+                                {% endfor %}
+                                <div class="form-text">Formatos aceitos: .txt, .pdf (máximo 16MB)</div>
                             </div>
                             <div class="d-grid">
                                 {{ form.submit(class="btn btn-primary btn-lg") }}
@@ -47,18 +53,148 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <h5>Histórico</h5>
+                        <h5>Estatísticas</h5>
                     </div>
                     <div class="card-body">
-                        <p>Veja seus emails classificados anteriormente.</p>
-                        <a href="#" class="btn btn-secondary">Ver Histórico</a>
+                        <p><strong>Total de emails classificados:</strong> {{ email_classifications|length }}</p>
+                        <p><strong>Produtivos:</strong> {{ email_classifications|selectattr('category', 'equalto', 'Produtivo')|list|length }}</p>
+                        <p><strong>Improdutivos:</strong> {{ email_classifications|selectattr('category', 'equalto', 'Improdutivo')|list|length }}</p>
                     </div>
                 </div>
             </div>
         </div>
+        
+        <!-- Tabela de Histórico -->
+{% if email_classifications %}
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-clock-history"></i> Histórico de Classificações
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th class="text-center">
+                                    <i class="bi bi-calendar"></i> Data
+                                </th>
+                                <th>
+                                    <i class="bi bi-envelope"></i> Conteúdo do Email
+                                </th>
+                                <th class="text-center">
+                                    <i class="bi bi-tags"></i> Categoria
+                                </th>
+                                <th>
+                                    <i class="bi bi-robot"></i> Resposta Sugerida
+                                </th>
+                                <th class="text-center">
+                                    <i class="bi bi-gear"></i> Ações
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for classification in email_classifications %}
+                            <tr class="table-row-clickable" style="cursor: pointer;" 
+                                onclick="window.location.href='{{ url_for('main.view_response', classification_id=classification.id) }}'"
+                                title="Clique para ver detalhes completos">
+                                <td class="text-nowrap text-center align-middle">
+                                    <small class="text-muted">
+                                        {{ classification.timestamp.strftime('%d/%m/%Y') }}<br>
+                                        {{ classification.timestamp.strftime('%H:%M') }}
+                                    </small>
+                                </td>
+                                <td class="align-middle">
+                                    <div class="text-truncate" style="max-width: 350px;" title="{{ classification.content }}">
+                                        <i class="bi bi-file-text text-muted me-1"></i>
+                                        {{ classification.content[:120] }}{% if classification.content|length > 120 %}<span class="text-muted">...</span>{% endif %}
+                                    </div>
+                                </td>
+                                <td class="text-center align-middle">
+                                    <span class="badge fs-6 bg-{{ 'success' if classification.category == 'Produtivo' else 'warning text-dark' }}">
+                                        <i class="bi bi-{{ 'check-circle' if classification.category == 'Produtivo' else 'exclamation-triangle' }}"></i>
+                                        {{ classification.category }}
+                                    </span>
+                                </td>
+                                <td class="align-middle">
+                                    <div class="text-truncate" style="max-width: 250px;" title="{{ classification.suggested_response }}">
+                                        <i class="bi bi-chat-dots text-muted me-1"></i>
+                                        {{ classification.suggested_response[:80] }}{% if classification.suggested_response|length > 80 %}<span class="text-muted">...</span>{% endif %}
+                                    </div>
+                                </td>
+                                <td class="text-center align-middle" onclick="event.stopPropagation();">
+                                    <a href="{{ url_for('main.view_response', classification_id=classification.id) }}" 
+                                       class="btn btn-sm btn-outline-primary" 
+                                       title="Ver detalhes completos">
+                                        <i class="bi bi-eye"></i> Ver
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+</div>
+{% else %}
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="alert alert-info border-0 shadow-sm" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-info-circle-fill fs-4 me-3"></i>
+                <div>
+                    <h4 class="alert-heading mb-1">Nenhum email classificado ainda!</h4>
+                    <p class="mb-0">Use o formulário acima para classificar seu primeiro email.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Limpa o textarea quando um arquivo é selecionado
+        $('#file').change(function() {
+            if (this.files && this.files.length > 0) {
+                $('#content').val('').prop('disabled', true);
+                $('#content').attr('placeholder', 'Arquivo selecionado: ' + this.files[0].name);
+            } else {
+                $('#content').prop('disabled', false);
+                $('#content').attr('placeholder', 'Cole o conteúdo do email aqui...');
+            }
+        });
+        
+        // Limpa o campo de arquivo quando o textarea é usado
+        $('#content').on('input', function() {
+            if ($(this).val().trim().length > 0) {
+                $('#file').val('').prop('disabled', true);
+            } else {
+                $('#file').prop('disabled', false);
+            }
+        });
+        
+        // Validação do tamanho do arquivo (16MB)
+        $('#file').change(function() {
+            if (this.files && this.files[0]) {
+                const fileSize = this.files[0].size;
+                const maxSize = 16 * 1024 * 1024; // 16MB
+                
+                if (fileSize > maxSize) {
+                    alert('O arquivo é muito grande. O tamanho máximo é 16MB.');
+                    $(this).val('');
+                    $('#content').prop('disabled', false);
+                    $('#content').attr('placeholder', 'Cole o conteúdo do email aqui...');
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
