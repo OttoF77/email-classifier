@@ -22,3 +22,13 @@ class Config:
         'pool_pre_ping': True,
         'pool_recycle': 300,
     }
+
+
+# Cria uma Configuração Específica para Testes
+class TestConfig(Config):
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    TESTING = True
+    WTF_CSRF_ENABLED = False  # Desabilita CSRF para testes
+    # Configuração do método de hash para compatibilidade
+    import os
+    os.environ['WERKZEUG_HASH_METHOD'] = 'pbkdf2:sha256'

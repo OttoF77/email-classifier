@@ -275,7 +275,7 @@
 <div class="row mb-5">
     <div class="col-12">
         <div class="cta-section text-center text-white p-5 rounded-3 position-relative">
-            <div class="position-relative" style="z-index: 2;">
+            <div class="position-relative z-index-2">
                 <h3 class="mb-3 pulse-animation">🚀 Pronto para começar?</h3>
                 <p class="fs-5 mb-4">
                     Crie sua conta gratuita e comece a classificar seus emails com inteligência artificial hoje mesmo!
@@ -333,6 +333,4 @@
 </div>
 {% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
-{% endblock %}
+{% block extra_css %}{% endblock %}

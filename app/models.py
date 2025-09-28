@@ -15,7 +15,7 @@ class User(UserMixin, db.Model):
     
     # Cria o método set_password(self, password) que recebe uma senha, gera um hash seguro e o armazena no campo password_hash.
     def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+        self.password_hash = generate_password_hash(password, method='pbkdf2:sha256')
 
     # Cria o método check_password(self, password) que recebe uma senha e a compara com o hash armazenado, retornando True ou False.
     def check_password(self, password):

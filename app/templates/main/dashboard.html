@@ -98,8 +98,8 @@
                         </thead>
                         <tbody>
                             {% for classification in email_classifications %}
-                            <tr class="table-row-clickable" style="cursor: pointer;" 
-                                onclick="window.location.href='{{ url_for('main.view_response', classification_id=classification.id) }}'"
+                            <tr class="table-row-clickable cursor-pointer" 
+                                data-url="{{ url_for('main.view_response', classification_id=classification.id) }}"
                                 title="Clique para ver detalhes completos">
                                 <td class="text-nowrap text-center align-middle">
                                     <small class="text-muted">
@@ -108,7 +108,7 @@
                                     </small>
                                 </td>
                                 <td class="align-middle">
-                                    <div class="text-truncate" style="max-width: 350px;" title="{{ classification.content }}">
+                                    <div class="text-truncate text-truncate-350" title="{{ classification.content }}">
                                         <i class="bi bi-file-text text-muted me-1"></i>
                                         {{ classification.content[:120] }}{% if classification.content|length > 120 %}<span class="text-muted">...</span>{% endif %}
                                     </div>
@@ -120,12 +120,12 @@
                                     </span>
                                 </td>
                                 <td class="align-middle">
-                                    <div class="text-truncate" style="max-width: 250px;" title="{{ classification.suggested_response }}">
+                                    <div class="text-truncate text-truncate-250" title="{{ classification.suggested_response }}">
                                         <i class="bi bi-chat-dots text-muted me-1"></i>
                                         {{ classification.suggested_response[:80] }}{% if classification.suggested_response|length > 80 %}<span class="text-muted">...</span>{% endif %}
                                     </div>
                                 </td>
-                                <td class="text-center align-middle" onclick="event.stopPropagation();">
+                                <td class="text-center align-middle" onclick="stopPropagation(event)">
                                     <a href="{{ url_for('main.view_response', classification_id=classification.id) }}" 
                                        class="btn btn-sm btn-outline-primary" 
                                        title="Ver detalhes completos">
@@ -159,42 +159,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    $(document).ready(function() {
-        // Limpa o textarea quando um arquivo é selecionado
-        $('#file').change(function() {
-            if (this.files && this.files.length > 0) {
-                $('#content').val('').prop('disabled', true);
-                $('#content').attr('placeholder', 'Arquivo selecionado: ' + this.files[0].name);
-            } else {
-                $('#content').prop('disabled', false);
-                $('#content').attr('placeholder', 'Cole o conteúdo do email aqui...');
-            }
-        });
-        
-        // Limpa o campo de arquivo quando o textarea é usado
-        $('#content').on('input', function() {
-            if ($(this).val().trim().length > 0) {
-                $('#file').val('').prop('disabled', true);
-            } else {
-                $('#file').prop('disabled', false);
-            }
-        });
-        
-        // Validação do tamanho do arquivo (16MB)
-        $('#file').change(function() {
-            if (this.files && this.files[0]) {
-                const fileSize = this.files[0].size;
-                const maxSize = 16 * 1024 * 1024; // 16MB
-                
-                if (fileSize > maxSize) {
-                    alert('O arquivo é muito grande. O tamanho máximo é 16MB.');
-                    $(this).val('');
-                    $('#content').prop('disabled', false);
-                    $('#content').attr('placeholder', 'Cole o conteúdo do email aqui...');
-                }
-            }
-        });
-    });
-</script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
 {% endblock %}

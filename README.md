@@ -383,11 +383,13 @@ email-classifier/
 │   │   └── images/             # Imagens do sistema
 │   └── templates/               # Templates Jinja2
 │       ├── base.html           # Template base
-│       ├── index.html          # Landing page
 │       ├── auth/               # Templates de auth
 │       │   ├── login.html
 │       │   └── register.html
-│       └── dashboard.html      # Dashboard principal
+│       └── main/               # Templates principais
+│           ├── index.html      # Landing page
+│           ├── dashboard.html  # Dashboard principal
+│           └── response_detail.html # Detalhes da resposta
 ├── migrations/                  # Migrações do banco
 ├── tests/                      # Testes automatizados
 ├── docs/                       # Documentação

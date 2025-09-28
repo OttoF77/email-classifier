@@ -11,7 +11,7 @@ import io
 # Cria a rota para a pagina principal do blueprint main
 @main.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('main/index.html')
 
 @main.route('/dashboard', methods=['GET', 'POST'])
 @login_required
@@ -85,7 +85,7 @@ def dashboard():
     # Busca todas as classificações do usuário atual, ordenadas da mais recente para a mais antiga
     email_classifications = EmailClassification.query.filter_by(user_id=current_user.id).order_by(EmailClassification.timestamp.desc()).all()
     
-    return render_template('dashboard.html', form=form, email_classifications=email_classifications)
+    return render_template('main/dashboard.html', form=form, email_classifications=email_classifications)
 
 @main.route('/response/<int:classification_id>')
 @login_required
@@ -99,4 +99,4 @@ def view_response(classification_id):
         return redirect(url_for('main.dashboard'))
     
     # Se chegou até aqui, o usuário tem permissão para ver a classificação
-    return render_template('response_detail.html', classification=classification)
+    return render_template('main/response_detail.html', classification=classification)
