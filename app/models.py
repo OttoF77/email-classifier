@@ -1,11 +1,9 @@
-
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from app import db
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
 # Cria User: colunas id (chave primária), usuário (não nulo), email (não nulo) e password_hash (não nulo)
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
@@ -13,6 +11,14 @@ class User(db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
     def __repr__(self):
         return f'<User {self.email}>'
+    
+    # Cria o método set_password(self, password) que recebe uma senha, gera um hash seguro e o armazena no campo password_hash.
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    # Cria o método check_password(self, password) que recebe uma senha e a compara com o hash armazenado, retornando True ou False.
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 # Criar EmailClassification: colunas como id (chave primária), content (o texto do email), category (a classificação "Produtivo"/"Improdutivo"), suggested_response (a resposta da IA) e user_id (foreign key).
 class EmailClassification(db.Model):
