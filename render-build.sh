@@ -22,8 +22,27 @@ echo "🐍 Usando $PYTHON_CMD $(${PYTHON_CMD} --version)"
 # Atualizar pip
 $PYTHON_CMD -m pip install --upgrade pip
 
-echo "📦 Instalando dependências..."
-$PYTHON_CMD -m pip install -r requirements.txt
+# Para resolver problemas de compatibilidade com psycopg2 em Python 3.13+
+echo "🔧 Preparando instalação do PostgreSQL driver..."
+$PYTHON_CMD -m pip install --upgrade setuptools wheel
+
+echo "📦 Instalando dependências otimizadas para Render..."
+# Usar requirements específico do Render se disponível
+if [ -f "requirements-render.txt" ]; then
+    echo "🎯 Usando requirements-render.txt otimizado"
+    $PYTHON_CMD -m pip install -r requirements-render.txt
+else
+    echo "📋 Usando requirements.txt padrão"
+    $PYTHON_CMD -m pip install -r requirements.txt
+fi
+
+# Alternativa para psycopg2 se houver problemas de compatibilidade
+echo "🔧 Verificando compatibilidade do PostgreSQL driver..."
+if ! $PYTHON_CMD -c "import psycopg2" 2>/dev/null; then
+    echo "⚠️  Problema com psycopg2, tentando reinstalação..."
+    $PYTHON_CMD -m pip uninstall -y psycopg2-binary
+    $PYTHON_CMD -m pip install --no-cache-dir psycopg2-binary
+fi
 
 echo "🔍 Verificando instalação das dependências críticas..."
 $PYTHON_CMD -c "import flask; print('✅ Flask instalado')"

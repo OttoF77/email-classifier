@@ -5,6 +5,7 @@
 1. **Conta no Render**: [render.com](https://render.com)
 2. **Repositório no GitHub**: Código deve estar no GitHub
 3. **PostgreSQL Database**: Banco de dados PostgreSQL (Render oferece grátis)
+4. **Python 3.11+**: Especificado em `runtime.txt` e `.python-version`
 
 ---
 
@@ -141,7 +142,14 @@ DATABASE_URL=postgresql://user:pass@host:5432/db
 pip install -r requirements.txt
 ```
 
-#### **4. Port Issues**
+#### **4. psycopg2 Error (Python 3.13+)**
+```bash
+# Erro: undefined symbol: _PyInterpreterState_Get
+# Solução: Usar Python 3.11 em runtime.txt
+echo "python-3.11.10" > runtime.txt
+```
+
+#### **5. Port Issues**
 - Render define `PORT` automaticamente
 - Não definir `PORT` nas env vars
 

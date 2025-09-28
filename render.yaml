@@ -8,8 +8,6 @@ services:
     startCommand: "gunicorn --config gunicorn_config.py run:app"
     branch: main
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.9.6
       - key: FLASK_ENV
         value: production
       - key: FLASK_DEBUG
