@@ -21,7 +21,7 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-# Criar EmailClassification: colunas como id (chave primária), content (o texto do email), category (a classificação "Produtivo"/"Improdutivo"), suggested_response (a resposta da IA) e user_id (foreign key).
+# Cria EmailClassification: colunas como id (chave primária), content (o texto do email), category (a classificação "Produtivo"/"Improdutivo"), suggested_response (a resposta da IA) e user_id (foreign key).
 class EmailClassification(db.Model):
     __tablename__ = 'email_classifications'
     id = db.Column(db.Integer, primary_key=True)

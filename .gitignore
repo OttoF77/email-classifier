@@ -1,5 +1,3 @@
-/docs/
-
 ### Flask ###
 instance/*
 !instance/.gitignore

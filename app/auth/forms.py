@@ -12,7 +12,6 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 # Formulário de registro
-# crie a classe RegistrationForm: com campos para email, password, password2 (para confirmação da senha) e um botão de envio. Use validadores para garantir que o e-mail não está em uso e que as senhas coincidem.
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=64)])
     email = StringField('Email', validators=[DataRequired(), Email()])

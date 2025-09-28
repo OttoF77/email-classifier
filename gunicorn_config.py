@@ -5,7 +5,8 @@ import os
 import multiprocessing
 
 # Configurações básicas
-bind = "0.0.0.0:8080"  # Interface e porta
+port = int(os.environ.get("PORT", 8080))  # Porta do Render ou 8080 local
+bind = f"0.0.0.0:{port}"  # Interface e porta dinâmica
 workers = multiprocessing.cpu_count() * 2 + 1  # Número de workers baseado no CPU
 worker_class = "sync"  # Classe do worker
 worker_connections = 1000  # Conexões por worker
