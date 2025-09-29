@@ -1,90 +1,210 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css">
-    <title>Detalhes da Classificação - Email Classifier</title>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url_for('main.index') }}">Email Classifier</a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="{{ url_for('main.dashboard') }}">Dashboard</a>
-                <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+{% extends "base.html" %}
+
+{% block title %}Detalhes da Classificação - Email Classifier{% endblock %}
+
+{% block extra_css %}
+<style>
+.email-content {
+    max-height: 400px;
+    overflow-y: auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.response-content {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    white-space: pre-wrap;
+}
+
+.classification-badge {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+}
+
+.copy-btn {
+    transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.copy-success {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+    color: white !important;
+}
+
+.card-detail {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+    border-bottom: 3px solid;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.email-section .section-header {
+    border-color: #0d6efd;
+}
+
+.response-section .section-header {
+    border-color: #198754;
+}
+
+.action-buttons {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+    .email-content {
+        font-size: 0.85rem;
+        max-height: 300px;
+    }
+    
+    .response-content {
+        font-size: 0.85rem;
+    }
+    
+    .action-buttons {
+        padding: 1rem;
+    }
+    
+    .btn-group-mobile {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <!-- Breadcrumb Navigation -->
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb bg-transparent p-0 mb-0">
+                    <li class="breadcrumb-item">
+                        <a href="{{ url_for('main.dashboard') }}" class="text-decoration-none">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <i class="bi bi-eye"></i> Detalhes da Classificação
+                    </li>
+                </ol>
+            </nav>
+
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="display-6 mb-1">
+                        <i class="bi bi-file-text-fill text-primary"></i> 
+                        Detalhes da Classificação
+                    </h1>
+                    <p class="text-muted mb-0">
+                        <i class="bi bi-calendar3"></i> 
+                        Classificado em {{ classification.timestamp.strftime('%d/%m/%Y às %H:%M') }}
+                    </p>
+                </div>
+                <div class="text-end">
+                    <span class="badge classification-badge bg-{{ 'success' if classification.category == 'Produtivo' else 'warning text-dark' }}">
+                        <i class="bi bi-{{ 'check-circle' if classification.category == 'Produtivo' else 'exclamation-triangle' }}"></i>
+                        {{ classification.category }}
+                    </span>
+                </div>
             </div>
         </div>
-    </nav>
-    
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-12">
-                <!-- Botão de voltar -->
-                <div class="mb-3">
-                    <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary">
-                        <i class="bi bi-arrow-left"></i> Voltar ao Dashboard
-                    </a>
-                </div>
-                
-                <!-- Card principal com detalhes -->
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">
-                            <i class="bi bi-envelope"></i> Detalhes da Classificação
-                        </h4>
-                        <small>Classificado em {{ classification.timestamp.strftime('%d/%m/%Y às %H:%M') }}</small>
+    </div>
+
+    <div class="row">
+        <!-- Email Content Column -->
+        <div class="col-lg-6 mb-4">
+            <div class="card card-detail h-100">
+                <div class="card-body">
+                    <div class="email-section">
+                        <h5 class="section-header text-primary mb-3">
+                            <i class="bi bi-envelope-open-fill"></i> 
+                            Conteúdo do Email
+                        </h5>
+                        
+                        <div class="border rounded-3 p-3 bg-light position-relative">
+                            <div class="email-content" id="email-content-display">{{ classification.content }}</div>
+                            
+                            <!-- Quick Actions for Email -->
+                            <div class="position-absolute top-0 end-0 p-2">
+                                <button class="btn btn-sm btn-outline-primary copy-btn" 
+                                        data-content="{{ classification.content }}"
+                                        data-type="email"
+                                        title="Copiar email">
+                                    <i class="bi bi-clipboard"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Email Stats -->
+                        <div class="mt-3">
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <div class="small text-muted">Caracteres</div>
+                                    <div class="fw-bold">{{ classification.content|length }}</div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="small text-muted">Palavras</div>
+                                    <div class="fw-bold">{{ classification.content.split()|length }}</div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="small text-muted">ID</div>
+                                    <div class="fw-bold text-monospace">#{{ classification.id }}</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <!-- Informações da classificação -->
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <h6 class="text-muted">CATEGORIA</h6>
-                                <span class="badge fs-6 bg-{{ 'success' if classification.category == 'Produtivo' else 'warning' }}">
-                                    {{ classification.category }}
-                                </span>
-                            </div>
-                            <div class="col-md-6">
-                                <h6 class="text-muted">ID DA CLASSIFICAÇÃO</h6>
-                                <span class="text-monospace">#{{ classification.id }}</span>
-                            </div>
-                        </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Suggested Response Column -->
+        <div class="col-lg-6 mb-4">
+            <div class="card card-detail h-100">
+                <div class="card-body">
+                    <div class="response-section">
+                        <h5 class="section-header text-success mb-3">
+                            <i class="bi bi-robot"></i> 
+                            Resposta Sugerida pela IA
+                        </h5>
                         
-                        <!-- Conteúdo do email -->
-                        <div class="mb-4">
-                            <h5 class="text-primary">
-                                <i class="bi bi-file-text"></i> Conteúdo do Email
-                            </h5>
-                            <div class="border rounded p-3 bg-light">
-                                <pre class="mb-0 pre-wrap">{{ classification.content }}</pre>
-                            </div>
-                        </div>
-                        
-                        <!-- Resposta sugerida -->
-                        <div class="mb-4">
-                            <h5 class="text-success">
-                                <i class="bi bi-robot"></i> Resposta Sugerida pela IA
-                            </h5>
-                            <div class="border rounded p-3 bg-success bg-opacity-10">
-                                <pre class="mb-0 pre-wrap">{{ classification.suggested_response }}</pre>
-                            </div>
-                        </div>
-                        
-                        <!-- Botões de ação -->
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <button class="btn btn-outline-primary copy-btn" data-target="suggested-response">
-                                    <i class="bi bi-clipboard"></i> Copiar Resposta
-                                </button>
-                                <button class="btn btn-outline-secondary copy-btn" data-target="email-content">
-                                    <i class="bi bi-clipboard"></i> Copiar Email
+                        <div class="border rounded-3 p-3 bg-success bg-opacity-10 position-relative">
+                            <div class="response-content" id="response-content-display">{{ classification.suggested_response }}</div>
+                            
+                            <!-- Quick Actions for Response -->
+                            <div class="position-absolute top-0 end-0 p-2">
+                                <button class="btn btn-sm btn-outline-success copy-btn" 
+                                        data-content="{{ classification.suggested_response }}"
+                                        data-type="response"
+                                        title="Copiar resposta">
+                                    <i class="bi bi-clipboard"></i>
                                 </button>
                             </div>
-                            <div>
-                                <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">
-                                    <i class="bi bi-house"></i> Voltar ao Dashboard
-                                </a>
+                        </div>
+
+                        <!-- Response Info -->
+                        <div class="mt-3">
+                            <div class="alert alert-info border-0 py-2" role="alert">
+                                <i class="bi bi-info-circle me-1"></i>
+                                <small>Esta resposta foi gerada automaticamente pela IA baseada no conteúdo do email.</small>
                             </div>
                         </div>
                     </div>
@@ -92,13 +212,99 @@
             </div>
         </div>
     </div>
+
+    <!-- Action Buttons -->
+    <div class="row">
+        <div class="col-12">
+            <div class="action-buttons">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div class="btn-group-mobile d-flex gap-2 mb-3 mb-md-0">
+                        <button class="btn btn-primary copy-btn" 
+                                data-content="{{ classification.suggested_response }}"
+                                data-type="response">
+                            <i class="bi bi-clipboard-check"></i> 
+                            Copiar Resposta Completa
+                        </button>
+                        
+                        <button class="btn btn-outline-secondary copy-btn" 
+                                data-content="{{ classification.content }}"
+                                data-type="email">
+                            <i class="bi bi-envelope"></i> 
+                            Copiar Email Original
+                        </button>
+
+                        <a href="{{ url_for('main.feedback', classification_id=classification.id) }}" 
+                           class="btn btn-outline-warning">
+                            <i class="bi bi-chat-square-dots"></i> 
+                            Dar Feedback
+                        </a>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('main.dashboard') }}" class="btn btn-success">
+                            <i class="bi bi-arrow-left"></i> 
+                            Voltar ao Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast for copy feedback -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="copyToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-success text-white">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <strong class="me-auto">Copiado!</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body">
+            Conteúdo copiado para a área de transferência.
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const copyButtons = document.querySelectorAll('.copy-btn');
+    const toast = new bootstrap.Toast(document.getElementById('copyToast'));
     
-    <!-- Hidden elements for copying -->
-    <textarea id="suggested-response" class="visually-hidden">{{ classification.suggested_response }}</textarea>
-    <textarea id="email-content" class="visually-hidden">{{ classification.content }}</textarea>
-    
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
-</html>
+    copyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const content = this.getAttribute('data-content');
+            const type = this.getAttribute('data-type');
+            
+            // Create temporary textarea
+            const textarea = document.createElement('textarea');
+            textarea.value = content;
+            document.body.appendChild(textarea);
+            
+            // Select and copy
+            textarea.select();
+            document.execCommand('copy');
+            
+            // Remove temporary element
+            document.body.removeChild(textarea);
+            
+            // Visual feedback
+            const originalHTML = this.innerHTML;
+            this.innerHTML = '<i class="bi bi-check"></i> Copiado!';
+            this.classList.add('copy-success');
+            
+            // Show toast
+            toast.show();
+            
+            // Reset button after delay
+            setTimeout(() => {
+                this.innerHTML = originalHTML;
+                this.classList.remove('copy-success');
+            }, 2000);
+        });
+    });
+});
+</script>
+{% endblock %}

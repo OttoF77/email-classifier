@@ -126,11 +126,31 @@
                                     </div>
                                 </td>
                                 <td class="text-center align-middle" onclick="stopPropagation(event)">
-                                    <a href="{{ url_for('main.view_response', classification_id=classification.id) }}" 
-                                       class="btn btn-sm btn-outline-primary" 
-                                       title="Ver detalhes completos">
-                                        <i class="bi bi-eye"></i> Ver
-                                    </a>
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ url_for('main.view_response', classification_id=classification.id) }}" 
+                                           class="btn btn-sm btn-outline-primary" 
+                                           title="Ver detalhes completos">
+                                            <i class="bi bi-eye"></i> Ver
+                                        </a>
+                                        
+                                        {% if classification.user_feedback %}
+                                            <span class="btn btn-sm btn-outline-success" title="Feedback enviado">
+                                                <i class="bi bi-check-lg"></i>
+                                            </span>
+                                        {% else %}
+                                            <a href="{{ url_for('main.feedback', classification_id=classification.id) }}" 
+                                               class="btn btn-sm btn-outline-warning" 
+                                               title="Dar feedback sobre a classificação">
+                                                <i class="bi bi-chat-square-dots"></i> Feedback
+                                            </a>
+                                        {% endif %}
+                                        
+                                        <button class="btn btn-sm btn-outline-danger" 
+                                                onclick="confirmDelete({{ classification.id }})"
+                                                title="Excluir classificação">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -156,8 +176,55 @@
     </div>
 </div>
 {% endif %}
+
+<!-- Modal de Confirmação de Exclusão -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Confirmar Exclusão
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Atenção:</strong> Você está prestes a excluir esta classificação de email.</p>
+                <p class="mb-0">Esta ação <strong>não pode ser desfeita</strong>. Deseja continuar?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg"></i> Cancelar
+                </button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Confirmar Exclusão
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script>
+// Função para confirmar exclusão
+function confirmDelete(classificationId) {
+    const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    const form = document.getElementById('deleteForm');
+    
+    // Atualizar a ação do formulário com o ID correto
+    form.action = '/delete/' + classificationId;
+    
+    // Mostrar o modal
+    modal.show();
+}
+
+// Prevenir propagação de eventos nos botões
+function stopPropagation(event) {
+    event.stopPropagation();
+}
+</script>
 {% endblock %}

@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Feedback - Email Classifier{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('main.dashboard') }}">Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Feedback</li>
+            </ol>
+        </nav>
+        
+        <h1 class="display-6">
+            <i class="bi bi-chat-square-dots"></i> Feedback sobre Classificação
+        </h1>
+        <p class="lead text-muted">Ajude-nos a melhorar a precisão da IA</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <!-- Email Original -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5><i class="bi bi-file-text"></i> Email Analisado</h5>
+            </div>
+            <div class="card-body">
+                <div class="bg-light p-3 rounded border">
+                    <pre class="mb-0" style="white-space: pre-wrap; font-family: inherit;">{{ classification.content }}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Classificação da IA -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5><i class="bi bi-robot"></i> Classificação da IA</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-{{ 'success' if classification.category == 'Produtivo' else 'warning' }} border-0">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-{{ 'check-circle-fill' if classification.category == 'Produtivo' else 'exclamation-triangle-fill' }} fs-3 me-3"></i>
+                        <div>
+                            <h4 class="alert-heading mb-1">{{ classification.category }}</h4>
+                            <p class="mb-0">Classificado em {{ classification.timestamp.strftime('%d/%m/%Y às %H:%M') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulário de Feedback -->
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-star"></i> Seu Feedback</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-4">
+                        {{ form.feedback_type.label(class="form-label fw-bold") }}
+                        <div class="mt-2">
+                            {% for subfield in form.feedback_type %}
+                                <div class="form-check mb-2">
+                                    {{ subfield(class="form-check-input") }}
+                                    {{ subfield.label(class="form-check-label") }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% for error in form.feedback_type.errors %}
+                            <div class="alert alert-danger mt-2">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-4" id="corrected_category_div" style="display: none;">
+                        {{ form.corrected_category.label(class="form-label fw-bold") }}
+                        {{ form.corrected_category(class="form-select") }}
+                        {% for error in form.corrected_category.errors %}
+                            <div class="alert alert-danger mt-2">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form.feedback_notes.label(class="form-label fw-bold") }}
+                        {{ form.feedback_notes(class="form-control", rows="4") }}
+                        {% for error in form.feedback_notes.errors %}
+                            <div class="alert alert-danger mt-2">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary me-md-2">
+                            <i class="bi bi-arrow-left"></i> Voltar
+                        </a>
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h6><i class="bi bi-lightbulb"></i> Como dar um bom feedback</h6>
+            </div>
+            <div class="card-body">
+                <div class="small">
+                    <p><strong>📧 Email Produtivo:</strong></p>
+                    <ul class="mb-3">
+                        <li>Solicitações de trabalho</li>
+                        <li>Relatórios e documentos</li>
+                        <li>Reuniões e apresentações</li>
+                        <li>Coordenação entre equipes</li>
+                        <li>Prazos e entregas</li>
+                    </ul>
+                    
+                    <p><strong>🚫 Email Improdutivo:</strong></p>
+                    <ul class="mb-3">
+                        <li>Spam e promoções</li>
+                        <li>Correntes e piadas</li>
+                        <li>Conteúdo pessoal inadequado</li>
+                        <li>Ofertas comerciais não solicitadas</li>
+                    </ul>
+                    
+                    <p><strong>💡 Dica:</strong> Nas observações, mencione palavras-chave que deveriam ter influenciado a classificação.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const feedbackRadios = document.querySelectorAll('input[name="feedback_type"]');
+    const correctedCategoryDiv = document.getElementById('corrected_category_div');
+    
+    function toggleCorrectedCategory() {
+        const selectedValue = document.querySelector('input[name="feedback_type"]:checked')?.value;
+        if (selectedValue === 'incorrect' || selectedValue === 'partially_correct') {
+            correctedCategoryDiv.style.display = 'block';
+            correctedCategoryDiv.querySelector('select').required = true;
+        } else {
+            correctedCategoryDiv.style.display = 'none';
+            correctedCategoryDiv.querySelector('select').required = false;
+            correctedCategoryDiv.querySelector('select').value = '';
+        }
+    }
+    
+    feedbackRadios.forEach(radio => {
+        radio.addEventListener('change', toggleCorrectedCategory);
+    });
+    
+    // Verificar estado inicial
+    toggleCorrectedCategory();
+});
+</script>
+{% endblock %}

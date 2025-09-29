@@ -30,8 +30,15 @@ class EmailClassification(db.Model):
     suggested_response = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    
+    # Campos para feedback do usuário
+    user_feedback = db.Column(db.String(20), nullable=True)  # 'correct', 'incorrect', 'partially_correct'
+    corrected_category = db.Column(db.String(64), nullable=True)  # categoria corrigida pelo usuário
+    feedback_notes = db.Column(db.Text, nullable=True)  # observações adicionais
 
     user = db.relationship('User', backref=db.backref('email_classifications', lazy=True))
     def __repr__(self):
         return f'<EmailClassification {self.category} for User ID {self.user_id}>'
+
+
     

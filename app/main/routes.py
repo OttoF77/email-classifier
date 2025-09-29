@@ -1,7 +1,7 @@
-from flask import render_template, flash, redirect, url_for, abort
+from flask import render_template, flash, redirect, url_for, abort, request
 from . import main
 from flask_login import login_required, current_user
-from app.main.forms import EmailForm
+from app.main.forms import EmailForm, FeedbackForm
 from app.models import EmailClassification
 from app import db
 from app.services.ai_service import classify_email, generate_response
@@ -100,3 +100,51 @@ def view_response(classification_id):
     
     # Se chegou até aqui, o usuário tem permissão para ver a classificação
     return render_template('main/response_detail.html', classification=classification)
+
+@main.route('/feedback/<int:classification_id>', methods=['GET', 'POST'])
+@login_required
+def feedback(classification_id):
+    """Página para fornecer feedback sobre a classificação da IA"""
+    classification = EmailClassification.query.get_or_404(classification_id)
+    
+    # Verificação de segurança
+    if classification.user_id != current_user.id:
+        flash('Você não tem permissão para visualizar esta classificação.', 'danger')
+        return redirect(url_for('main.dashboard'))
+    
+    form = FeedbackForm()
+    
+    if form.validate_on_submit():
+        # Atualizar a classificação com o feedback
+        classification.user_feedback = form.feedback_type.data
+        classification.corrected_category = form.corrected_category.data
+        classification.feedback_notes = form.feedback_notes.data
+        
+        db.session.commit()
+        flash('Obrigado pelo seu feedback! Isso nos ajuda a melhorar a IA.', 'success')
+        return redirect(url_for('main.dashboard'))
+    
+    return render_template('main/feedback.html', form=form, classification=classification)
+
+@main.route('/delete/<int:classification_id>', methods=['POST'])
+@login_required
+def delete_classification(classification_id):
+    """Excluir uma classificação de email"""
+    classification = EmailClassification.query.get_or_404(classification_id)
+    
+    # Verificação de segurança: garante que o registro pertence ao usuário atual
+    if classification.user_id != current_user.id:
+        flash('Você não tem permissão para excluir esta classificação.', 'danger')
+        return redirect(url_for('main.dashboard'))
+    
+    try:
+        db.session.delete(classification)
+        db.session.commit()
+        flash('Classificação excluída com sucesso!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('Erro ao excluir classificação. Tente novamente.', 'danger')
+    
+    return redirect(url_for('main.dashboard'))
+
+

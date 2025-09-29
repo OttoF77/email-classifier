@@ -125,3 +125,64 @@ function buttonFeedback(button, message, originalMessage, feedbackClass = 'btn-s
         button.className = originalClasses;
     }, duration);
 }
+
+// ============================================
+// COPY TO CLIPBOARD FUNCTIONS
+// ============================================
+
+// Função moderna para copiar texto usando Clipboard API
+async function copyToClipboard(text) {
+    try {
+        if (navigator.clipboard && window.isSecureContext) {
+            // Use modern Clipboard API if available
+            await navigator.clipboard.writeText(text);
+            return true;
+        } else {
+            // Fallback for older browsers or non-HTTPS
+            return fallbackCopyToClipboard(text);
+        }
+    } catch (error) {
+        console.error('Erro ao copiar:', error);
+        return fallbackCopyToClipboard(text);
+    }
+}
+
+// Fallback function for copying text
+function fallbackCopyToClipboard(text) {
+    try {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.left = '-999999px';
+        textarea.style.top = '-999999px';
+        document.body.appendChild(textarea);
+        
+        textarea.select();
+        textarea.setSelectionRange(0, 99999);
+        
+        const successful = document.execCommand('copy');
+        document.body.removeChild(textarea);
+        
+        return successful;
+    } catch (error) {
+        console.error('Erro no fallback de cópia:', error);
+        return false;
+    }
+}
+
+// Função para mostrar notificação de sucesso
+function showCopyNotification(type = 'Conteúdo') {
+    // Tenta usar toast do Bootstrap se disponível
+    const toastElement = document.getElementById('copyToast');
+    if (toastElement && window.bootstrap) {
+        const toast = new bootstrap.Toast(toastElement);
+        const toastBody = toastElement.querySelector('.toast-body');
+        if (toastBody) {
+            toastBody.textContent = `${type} copiado para a área de transferência.`;
+        }
+        toast.show();
+    } else {
+        // Fallback para alert
+        alert(`${type} copiado para a área de transferência!`);
+    }
+}
