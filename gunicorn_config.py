@@ -2,15 +2,18 @@
 
 import os
 
-print(f"[GUNICORN CONFIG] Carregando configuração do Gunicorn")
-print(f"[GUNICORN CONFIG] PORT environment: {os.environ.get('PORT', 'NOT SET')}")
+# Forçar logs para garantir que o config está sendo carregado
+import sys
+print(f"🔧 [GUNICORN CONFIG] ===== CARREGANDO CONFIGURAÇÃO CUSTOMIZADA =====", file=sys.stderr)
+print(f"🔧 [GUNICORN CONFIG] PORT environment: {os.environ.get('PORT', 'NOT SET')}", file=sys.stderr)
 
 # Configurações básicas para Render
 port = int(os.environ.get("PORT", 10000))  # Render usa porta 10000 por padrão
 bind = f"0.0.0.0:{port}"  # Bind obrigatório para 0.0.0.0 no Render
 
-print(f"[GUNICORN CONFIG] Bind configurado para: {bind}")
-print(f"[GUNICORN CONFIG] Workers: 2, Timeout: 300s")
+print(f"🔧 [GUNICORN CONFIG] Bind configurado para: {bind}", file=sys.stderr)
+print(f"🔧 [GUNICORN CONFIG] Workers: 2, Timeout: 300s", file=sys.stderr)
+print(f"🔧 [GUNICORN CONFIG] ===== CONFIGURAÇÃO CUSTOMIZADA CARREGADA =====", file=sys.stderr)
 
 # Workers - configuração conservadora para Render
 workers = 2  # Número fixo para evitar problemas de memória
