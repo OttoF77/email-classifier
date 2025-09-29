@@ -1,1 +1,1 @@
-web: ./start.sh
+web: python -c "import gunicorn_config; print('Configuração carregada:', gunicorn_config)" && gunicorn --config gunicorn_config.py run:app
