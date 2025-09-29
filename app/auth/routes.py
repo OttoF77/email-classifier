@@ -28,12 +28,23 @@ def login():
         return redirect(url_for('main.index'))
     form = LoginForm()
     if form.validate_on_submit():
+        print(f"[DEBUG] Tentativa de login com email: {form.email.data}")
         user = User.query.filter_by(email=form.email.data).first()
-        if user and user.check_password(form.password.data):
-            login_user(user)
-            flash('Login realizado com sucesso!')
-            return redirect(url_for('main.index'))
+        print(f"[DEBUG] Usuário encontrado: {user is not None}")
+        if user:
+            print(f"[DEBUG] Hash armazenado: {user.password_hash[:20]}...")
+            password_check = user.check_password(form.password.data)
+            print(f"[DEBUG] Verificação de senha: {password_check}")
+            if password_check:
+                login_user(user)
+                flash('Login realizado com sucesso!')
+                print(f"[DEBUG] Login bem-sucedido para usuário: {user.email}")
+                return redirect(url_for('main.index'))
+        print(f"[DEBUG] Falha no login - usuário ou senha incorretos")
         flash('Email ou senha inválidos.')
+    else:
+        if request.method == 'POST':
+            print(f"[DEBUG] Formulário não passou na validação: {form.errors}")
     return render_template('auth/login.html', title='Login', form=form)
 
 # Cria a rota /logout: Uma rota simples que chama a função logout_user() do Flask-Login e redireciona o usuário para a página de login ou para a landing page.
