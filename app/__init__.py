@@ -51,8 +51,8 @@ def create_app():
     try:
         from app.auth import auth
         print(f"🔧 [CREATE_APP] Blueprint auth importado: {auth.name}", file=sys.stderr)
-        app.register_blueprint(auth, url_prefix='/auth')
-        print("🔧 [CREATE_APP] Blueprint 'auth' registrado com prefixo /auth", file=sys.stderr)
+        app.register_blueprint(auth)
+        print("🔧 [CREATE_APP] Blueprint 'auth' registrado SEM prefixo", file=sys.stderr)
         
         # Verifica se as rotas foram registradas
         auth_routes = [rule for rule in app.url_map.iter_rules() if 'auth' in rule.endpoint]
