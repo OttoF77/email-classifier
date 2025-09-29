@@ -40,10 +40,10 @@ instance/
 # Static Images
 app/static/img/
 
-# Testing
+# Testing - Cache and temporary files only
 .pytest_cache/
-test_*.py
-tests/
+.coverage
+htmlcov/
 
 # Documentation
 docs/
