@@ -15,11 +15,15 @@ class User(UserMixin, db.Model):
     
     # Cria o método set_password(self, password) que recebe uma senha, gera um hash seguro e o armazena no campo password_hash.
     def set_password(self, password):
-        self.password_hash = generate_password_hash(password, method='pbkdf2:sha256')
+        # Usar método padrão mais compatível
+        self.password_hash = generate_password_hash(password)
 
     # Cria o método check_password(self, password) que recebe uma senha e a compara com o hash armazenado, retornando True ou False.
     def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+        print(f"[DEBUG] Verificando senha para hash: {self.password_hash}")
+        result = check_password_hash(self.password_hash, password)
+        print(f"[DEBUG] Resultado da verificação: {result}")
+        return result
 
 # Cria EmailClassification: colunas como id (chave primária), content (o texto do email), category (a classificação "Produtivo"/"Improdutivo"), suggested_response (a resposta da IA) e user_id (foreign key).
 class EmailClassification(db.Model):

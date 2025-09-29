@@ -13,12 +13,18 @@ def register():
         return redirect(url_for('main.index'))
     form = RegistrationForm()
     if form.validate_on_submit():
+        print(f"[DEBUG] Registrando usuário: {form.email.data}")
         user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
+        print(f"[DEBUG] Hash gerado: {user.password_hash}")
         db.session.add(user)
         db.session.commit()
+        print(f"[DEBUG] Usuário salvo no banco com ID: {user.id}")
         flash('Registro realizado com sucesso!')
         return redirect(url_for('auth.login'))
+    else:
+        if request.method == 'POST':
+            print(f"[DEBUG] Erro na validação do registro: {form.errors}")
     return render_template('auth/register.html', title='Register', form=form)
 
 # Cria a rota /login que terá lógica para GET (mostra o formulário de login) e POST (encontra o usuário pelo e-mail, usa check_password para verificar a senha e, se for válida, usa a função login_user() do Flask-Login).
