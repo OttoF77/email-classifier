@@ -2,9 +2,15 @@
 
 import os
 
+print(f"[GUNICORN CONFIG] Carregando configuração do Gunicorn")
+print(f"[GUNICORN CONFIG] PORT environment: {os.environ.get('PORT', 'NOT SET')}")
+
 # Configurações básicas para Render
 port = int(os.environ.get("PORT", 10000))  # Render usa porta 10000 por padrão
 bind = f"0.0.0.0:{port}"  # Bind obrigatório para 0.0.0.0 no Render
+
+print(f"[GUNICORN CONFIG] Bind configurado para: {bind}")
+print(f"[GUNICORN CONFIG] Workers: 2, Timeout: 300s")
 
 # Workers - configuração conservadora para Render
 workers = 2  # Número fixo para evitar problemas de memória
