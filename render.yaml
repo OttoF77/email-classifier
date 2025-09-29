@@ -6,7 +6,7 @@ services:
     startCommand: "gunicorn --config gunicorn_config.py run:app"
     envVars:
       - key: PYTHON_VERSION
-        value: "3.11.10"
+        value: "3.12.7"
       - key: FLASK_ENV
         value: production
       - key: FLASK_DEBUG

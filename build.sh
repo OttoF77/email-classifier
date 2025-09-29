@@ -1,43 +1,42 @@
-#!/bin/bash
+#!/bin/bash#!/bin/bash
 
-# Email Classifier - Build & Production Script
-# Este script consolida as funcionalidades de build, teste e deploy em produção
 
-set -e  # Sair se qualquer comando falhar
 
-# Cores para output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+# Email Classifier - Render Build Script# Email Classifier - Render Build Script
 
-# Função para logging
-log() {
-    echo -e "${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')]${NC} $1"
-}
+set -eset -e
 
-success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $1"
-}
 
-warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
-}
 
-error() {
-    echo -e "${RED}[ERROR]${NC} $1"
-}
+echo "🔄 Starting build process for Email Classifier..."echo "🔄 Starting build process for Email Classifier..."
 
-# Função para mostrar ajuda
-show_help() {
-    echo "Email Classifier - Build & Production Script"
-    echo ""
-    echo "Uso: $0 [COMMAND]"
-    echo ""
-    echo "Comandos disponíveis:"
-    echo "  install     - Instalar dependências"
-    echo "  test        - Executar testes"
+
+
+# Upgrade pip and install build tools# Upgrade pip
+
+echo "📦 Upgrading pip..."echo "📦 Upgrading pip..."
+
+pip install --upgrade pippip install --upgrade pip
+
+
+
+# Install dependencies# Install dependencies  
+
+echo "📦 Installing Python dependencies..."echo "📦 Installing Python dependencies..."
+
+pip install -r requirements.txtpip install -r requirements.txt
+
+
+
+# Run database migrations if needed# Run database migrations
+
+echo "🗄️ Attempting database migrations..."echo "🗄️ Running database migrations..."
+
+python -m flask db upgrade 2>/dev/null || echo "⚠️ Migrations will run on first app start"python -m flask db upgrade || echo "⚠️ No migrations to run or database not ready yet"
+
+
+
+echo "✅ Build completed successfully!"echo "✅ Build completed successfully!"
     echo "  dev         - Executar em modo desenvolvimento"
     echo "  prod        - Executar em modo produção com Gunicorn"
     echo "  build       - Build completo (install + test)"
