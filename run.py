@@ -50,6 +50,24 @@ def test_auth():
     except Exception as e:
         return f"Erro ao importar auth: {str(e)}"
 
+# Endpoint de health check simples
+@app.route('/health')
+def health():
+    return {"status": "ok", "message": "Aplicação funcionando"}
+
+# Endpoint para testar database
+@app.route('/test/db')
+def test_db():
+    try:
+        from app import db
+        from app.models import User
+        
+        # Tenta fazer uma query simples
+        user_count = User.query.count()
+        return {"status": "ok", "users_count": user_count, "db": "connected"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
 # Configura o run.py para carregar e executar a aplicação Flask.
 if __name__ == '__main__':
     app.run(debug=True)
