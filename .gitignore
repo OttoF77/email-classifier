@@ -1,457 +1,53 @@
-# ================================================# ================================================
-
-# EMAIL CLASSIFIER - GITIGNORE PARA PRODUÇÃO# EMAIL CLASSIFIER - GITIGNORE PARA PRODUÇÃO
-
-# ================================================# ================================================
-
-
-
-# ===== ARQUIVOS DE DESENVOLVIMENTO E TESTES =====# ===== ARQUIVOS DE DESENVOLVIMENTO E TESTES =====
-
-# Arquivos de teste específicos# Arquivos de teste e desenvolvimento
-
-test_*.pytest_*.py
-
-*_test.py*_test.py
-
-test_db.pytests/
-
-test_coffee_email.pytest_db.py
-
-test_delete_functionality.py
-
-test_delete_buttons.py# Documentação de desenvolvimento
-
-test_complete_delete.pyMELHORIAS_*.md
-
-test_improved_classification.pyREMOCAO_*.md
-
-test_email_specific.pyCONFIGURACAO_*.md
-
-RENDER_*.md
-
-# Diretório de testesERRO_*.md
-
-tests/PRODUCAO_*.md
-
-docs/melhorias_*.md
-
-# ===== DOCUMENTAÇÃO DE DESENVOLVIMENTO =====docs/GUNICORN_*.md
-
-# Documentos de melhorias e configurações
-
-MELHORIAS_*.md# Relatórios e logs de desenvolvimento
-
-REMOCAO_*.md*.log
-
-CONFIGURACAO_*.md*.pid
-
-RENDER_*.mdgunicorn.pid
-
-ERRO_*.md
-
-PRODUCAO_*.md# ===== CONFIGURAÇÕES DE AMBIENTE =====
-
-docs/melhorias_*.md# Arquivos de configuração local
-
-docs/GUNICORN_*.md.env
-
-.env.dev
-
-# ===== CONFIGURAÇÕES DE AMBIENTE =====.env.local
-
-# Arquivos de configuração local.env.production
-
-.env.python-version
-
-.env.dev
-
-.env.local# ===== FLASK E PYTHON =====
-
-.env.production# Byte-compiled / optimized / DLL files
-
-.python-version__pycache__/
-
+# Python
+__pycache__/
 *.py[cod]
-
-# ===== PYTHON E FLASK =====*$py.class
-
-# Byte-compiled / optimized / DLL filesinstance/*
-
-__pycache__/!instance/.gitignore
-
-*.py[cod].webassets-cache
-
-*$py.class
-
-# C extensions
-
-# Flask instance folder*.so
-
-instance/*
-
-!instance/.gitignore# Distribution / packaging
-
-.webassets-cache.Python
-
+*.so
+.Python
 build/
+dist/
+*.egg-info/
+*.egg
 
-# Distribution / packagingdevelop-eggs/
+# Virtual Environment
+venv/
+env/
+ENV/
 
-.Pythondist/
+# Environment Variables
+.env
+.env.*
 
-build/downloads/
-
-develop-eggs/eggs/
-
-dist/.eggs/
-
-downloads/lib/
-
-eggs/lib64/
-
-.eggs/parts/
-
-lib/sdist/
-
-lib64/var/
-
-parts/wheels/
-
-sdist/share/python-wheels/
-
-var/*.egg-info/
-
-wheels/.installed.cfg
-
-share/python-wheels/*.egg
-
-*.egg-info/MANIFEST
-
-.installed.cfg
-
-*.egg# PyInstaller
-
-MANIFEST#  Usually these files are written by a python script from a template
-
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-
-# PyInstaller*.manifest
-
-*.manifest*.spec
-
-*.spec
-
-# Installer logs
-
-# Unit test / coverage reportspip-log.txt
-
-htmlcov/pip-delete-this-directory.txt
-
-.tox/
-
-.nox/# Unit test / coverage reports
-
-.coveragehtmlcov/
-
-.coverage.*.tox/
-
-.cache.nox/
-
-nosetests.xml.coverage
-
-coverage.xml.coverage.*
-
-*.cover.cache
-
-*.py,covernosetests.xml
-
-.hypothesis/coverage.xml
-
-.pytest_cache/*.cover
-
-cover/*.py,cover
-
-.hypothesis/
-
-# Environments.pytest_cache/
-
-.envcover/
-
-.venv
-
-env/# Translations
-
-venv/*.mo
-
-ENV/*.pot
-
-env.bak/
-
-venv.bak/# Django stuff:
-
-*.log
-
-# ===== SISTEMA OPERACIONAL =====local_settings.py
-
-# macOSdb.sqlite3
-
-.DS_Storedb.sqlite3-journal
-
-.AppleDouble
-
-.LSOverride# Flask stuff:
-
+# Database
+*.db
+*.sqlite
 instance/
 
-# Windows
+# OS Files
+.DS_Store
+._*
 
-Thumbs.db# Scrapy stuff:
-
-ehthumbs.db.scrapy
-
-Desktop.ini
-
-# Sphinx documentation
-
-# Linuxdocs/_build/
-
-*~
-
-# PyBuilder
-
-# ===== EDITORES E IDEs =====.pybuilder/
-
-# VS Codetarget/
-
+# IDE
 .vscode/
-
-!.vscode/settings.json# Jupyter Notebook
-
-!.vscode/tasks.json.ipynb_checkpoints
-
-!.vscode/launch.json
-
-!.vscode/extensions.json# IPython
-
-profile_default/
-
-# PyCharmipython_config.py
-
 .idea/
 
-# pyenv
-
-# Sublime Text#   For a library or package, you might want to ignore these files since the code is
-
-*.sublime-project#   intended to run in multiple environments; otherwise, check them in:
-
-*.sublime-workspace# .python-version
-
-
-
-# ===== LOGS E TEMPORÁRIOS =====# pipenv
-
-# Logs#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-
-*.log#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-
-*.pid#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-
-gunicorn.pid#   install all needed dependencies.
-
-#Pipfile.lock
-
-# Temporary files
-
-*.tmp# poetry
-
-*.temp#   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
-
-*.swp#   This is especially recommended for binary packages to ensure reproducibility, and is more
-
-*.swo#   commonly ignored for libraries.
-
-*~#   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
-
-#poetry.lock
-
-# ===== BANCO DE DADOS LOCAL =====
-
-# SQLite databases (apenas para desenvolvimento local)# pdm
-
-*.db#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
-
-*.sqlite3#pdm.lock
-
-instance/*.db#   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
-
-#   in version control.
-
-# ===== CACHE E BUILD =====#   https://pdm.fming.dev/#use-with-ide
-
-# Node modules (se houver).pdm.toml
-
-node_modules/
-
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
-
-# Build artifacts__pypackages__/
-
-build/
-
-dist/# Celery stuff
-
-celerybeat-schedule
-
-# ===== RENDER E DEPLOY =====celerybeat.pid
-
-# Build scripts específicos (manter apenas os necessários)
-
-# Comentar se necessário para deploy# SageMath parsed files
-
-# build.sh*.sage.py
-
-# render-build.sh
-# Environments
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
-# pytype static type analyzer
-.pytype/
-
-# Cython debug symbols
-cython_debug/
-
-# PyCharm
-#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
-#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
-#  and can be added to the global gitignore or merged into this file.  For a more nuclear
-#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
-#.idea/
-
-### Python ###
-# Byte-compiled / optimized / DLL files
-
-# C extensions
-
-# Distribution / packaging
-
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-
-# Installer logs
-
-# Unit test / coverage reports
-
-# Translations
-
-# Django stuff:
-
-# Flask stuff:
-
-# Scrapy stuff:
-
-# Sphinx documentation
-
-# PyBuilder
-
-# Jupyter Notebook
-
-# IPython
-
-# pyenv
-#   For a library or package, you might want to ignore these files since the code is
-#   intended to run in multiple environments; otherwise, check them in:
-# .python-version
-
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-
-# poetry
-#   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
-#   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
-
-# pdm
-#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
-#   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
-#   in version control.
-#   https://pdm.fming.dev/#use-with-ide
-
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
-
-# Celery stuff
-
-# SageMath parsed files
-
-# Environments
-
-# Spyder project settings
-
-# Rope project settings
-
-# mkdocs documentation
-
-# mypy
-
-# Pyre type checker
-
-# pytype static type analyzer
-
-# Cython debug symbols
-
-# PyCharm
-#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
-#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
-#  and can be added to the global gitignore or merged into this file.  For a more nuclear
-#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
-
-### Python Patch ###
-# Poetry local configuration file - https://python-poetry.org/docs/configuration/#local-configuration
-poetry.toml
-
-# ruff
-.ruff_cache/
-
-# LSP config files
-pyrightconfig.json
-
-### venv ###
-# Virtualenv
-# http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
-[Bb]in
-[Ii]nclude
-[Ll]ib
-[Ll]ib64
-[Ll]ocal
-[Ss]cripts
-pyvenv.cfg
-pip-selfcheck.json
+# Logs
+*.log
+*.pid
+
+# Flask
+.webassets-cache
+
+# Static Images
+app/static/img/
+
+# Testing
+.pytest_cache/
+test_*.py
+tests/
+
+# Documentation
+docs/
+
+# Temporary
+temp/
+tmp/
