@@ -37,8 +37,8 @@ instance/
 # Flask
 .webassets-cache
 
-# Static Images
-app/static/img/
+# Static Images - Keep images in repository
+# app/static/img/ - Commented out to include images in deploy
 
 # Testing - Cache and temporary files only
 .pytest_cache/
