@@ -7,25 +7,24 @@ from app.models import User
 # Formulário de login
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember_me = BooleanField('Remember Me')
-    submit = SubmitField('Login')
+    password = PasswordField('Senha', validators=[DataRequired()])
+    remember_me = BooleanField('Lembrar de mim')
+    submit = SubmitField('Entrar')
 
 # Formulário de registro
 class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=64)])
+    username = StringField('Nome de usuário', validators=[DataRequired(), Length(min=2, max=64)])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Register')
+    password = PasswordField('Senha', validators=[DataRequired(), Length(min=6)])
+    password2 = PasswordField('Confirmar Senha', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Criar Conta')
+
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user is not None:
+            raise ValidationError('Este nome de usuário já está em uso.')
 
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
-            raise ValidationError('Por favor, use um endereço de e-mail diferente.')
-        user = User.query.filter_by(username=self.username.data).first()
-        if user is not None:
-            raise ValidationError('Por favor, use um nome de usuário diferente.')
-        user = User.query.filter_by(email=self.email.data).first()
-
-
+            raise ValidationError('Este email já está cadastrado.')
