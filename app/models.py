@@ -9,14 +9,14 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(128), nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
     def __repr__(self):
         return f'<User {self.email}>'
     
     # Cria o método set_password(self, password) que recebe uma senha, gera um hash seguro e o armazena no campo password_hash.
     def set_password(self, password):
-        # Usar método padrão mais compatível
-        self.password_hash = generate_password_hash(password)
+        # Usar pbkdf2:sha256 que gera hash de tamanho consistente (~100 chars)
+        self.password_hash = generate_password_hash(password, method='pbkdf2:sha256')
 
     # Cria o método check_password(self, password) que recebe uma senha e a compara com o hash armazenado, retornando True ou False.
     def check_password(self, password):
