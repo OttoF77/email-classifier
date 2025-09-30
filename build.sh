@@ -1,19 +1,34 @@
-#!/bin/bash#!/bin/bash
+#!/bin/bash#!/bin/bash#!/bin/bash
 
 
+
+# Email Classifier - Render Build Script
+
+set -e
 
 # Email Classifier - Render Build Script# Email Classifier - Render Build Script
 
+echo "🔄 Starting build process for Email Classifier..."
+
 set -eset -e
 
+# Upgrade pip
 
+echo "📦 Upgrading pip..."
+
+pip install --upgrade pip
 
 echo "🔄 Starting build process for Email Classifier..."echo "🔄 Starting build process for Email Classifier..."
 
+# Install dependencies
 
+echo "📦 Installing Python dependencies..."
+
+pip install -r requirements.txt
 
 # Upgrade pip and install build tools# Upgrade pip
 
+echo "✅ Build completed successfully!"
 echo "📦 Upgrading pip..."echo "📦 Upgrading pip..."
 
 pip install --upgrade pippip install --upgrade pip

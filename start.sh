@@ -1,7 +1,14 @@
 #!/bin/bash
 
-echo "🚀 Starting Email Classifier with custom gunicorn config..."
-echo "🔧 Port: ${PORT:-10000}"
-echo "🔧 Command: gunicorn --config gunicorn_config.py run:app"
+# Email Classifier - Render Start Script
+set -e
 
-exec gunicorn --config gunicorn_config.py run:app
+echo "🚀 Starting Email Classifier application..."
+
+# Run database migrations if needed
+echo "🔧 Running database setup..."
+python3 migrate_db.py
+
+# Start the application with Gunicorn
+echo "🌐 Starting Gunicorn server..."
+exec gunicorn --bind 0.0.0.0:$PORT --workers 1 --timeout 120 --preload run:app

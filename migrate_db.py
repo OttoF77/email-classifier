@@ -1,20 +1,6 @@
 #!/usr/bin/env python3
 """
-Script para aplicar mi            print("🔧 Criando tabela email_classifications...")
-            cursor.execute("""
-                CREATE TABLE email_classifications (
-                    id SERIAL PRIMARY KEY,
-                    content TEXT NOT NULL,
-                    category VARCHAR(64) NOT NULL,
-                    suggested_response TEXT NOT NULL,
-                    user_id INTEGER NOT NULL,
-                    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    user_feedback VARCHAR(20),
-                    corrected_category VARCHAR(64),
-                    feedback_notes TEXT,
-                    FOREIGN KEY (user_id) REFERENCES users (id)
-                );
-            """)ssword_hash no banco de produção
+Script para aplicar migração do password_hash no banco de produção
 """
 
 import os
@@ -61,15 +47,19 @@ def apply_migration():
                 );
             """)
             
-            print("� Criando tabela email_classifications...")
+            print("🔧 Criando tabela email_classifications...")
             cursor.execute("""
                 CREATE TABLE email_classifications (
                     id SERIAL PRIMARY KEY,
                     content TEXT NOT NULL,
-                    category VARCHAR(20) NOT NULL,
+                    category VARCHAR(64) NOT NULL,
                     suggested_response TEXT,
                     user_id INTEGER NOT NULL,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    user_feedback VARCHAR(20),
+                    corrected_category VARCHAR(64),
+                    feedback_notes TEXT,
                     FOREIGN KEY (user_id) REFERENCES users (id)
                 );
             """)
