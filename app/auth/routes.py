@@ -1,6 +1,7 @@
 
 from flask import Blueprint, request, jsonify, redirect, url_for, flash, render_template
 from flask_login import current_user, login_user, logout_user
+from flask_wtf.csrf import CSRFError
 from app.auth.forms import RegistrationForm, LoginForm
 from app.models import User
 from app import db
@@ -16,13 +17,17 @@ def register():
         
         form = RegistrationForm()
         
+        print(f"[DEBUG] Formulário de registro submetido: {form.data}")
+        
         if form.validate_on_submit():
+            print("[DEBUG] Formulário validado com sucesso")
             # Verifica se usuário já existe
             existing_user = User.query.filter(
                 (User.email == form.email.data) | (User.username == form.username.data)
             ).first()
             
             if existing_user:
+                print(f"[DEBUG] Usuário já existe: email={existing_user.email}, username={existing_user.username}")
                 if existing_user.email == form.email.data:
                     flash('Este email já está cadastrado.', 'danger')
                 else:
@@ -30,14 +35,18 @@ def register():
                 return render_template('auth/register.html', form=form)
             
             # Cria novo usuário
+            print(f"[DEBUG] Criando novo usuário: {form.username.data}, {form.email.data}")
             user = User(username=form.username.data, email=form.email.data)
             user.set_password(form.password.data)
             
             db.session.add(user)
             db.session.commit()
+            print(f"[DEBUG] Usuário criado com ID: {user.id}")
             
             flash('Conta criada com sucesso! Você pode fazer login agora.', 'success')
             return redirect(url_for('auth.login'))
+        else:
+            print(f"[DEBUG] Formulário não validado. Erros: {form.errors}")
         
         return render_template('auth/register.html', form=form)
         
@@ -87,3 +96,10 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
+
+# Handler para erros CSRF
+@auth.errorhandler(CSRFError)
+def handle_csrf_error(e):
+    print(f"[ERROR] CSRF Error: {str(e)}")
+    flash('Token de segurança inválido. Por favor, tente novamente.', 'danger')
+    return redirect(request.url)

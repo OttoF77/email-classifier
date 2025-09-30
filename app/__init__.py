@@ -3,6 +3,7 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_wtf.csrf import CSRFProtect
 from dotenv import load_dotenv
 import os
 
@@ -16,6 +17,9 @@ migrate = Migrate()
 # Cria a instância do LoginManager fora da função create_app.
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
+
+# Cria instância do CSRF Protection
+csrf = CSRFProtect()
 
 # Cria função para receber um ID e retornar o objeto User correspondente daquele ID.
 from app.models import User
@@ -65,6 +69,10 @@ def create_app():
     
     login_manager.init_app(app)
     print("🔧 [CREATE_APP] LoginManager inicializado", file=sys.stderr)
+    
+    # Inicializa CSRF Protection
+    csrf.init_app(app)
+    print("🔧 [CREATE_APP] CSRF Protection inicializado", file=sys.stderr)
     
     # Lista final de todas as rotas
     total_routes = len(list(app.url_map.iter_rules()))
