@@ -22,16 +22,27 @@
 
 ---
 
-## � Prints / Imagens
+## 📷 Prints / Imagens
 
-Pequena referência dos screenshots usados na documentação e no manual do usuário:
+Capturas de tela do sistema:
 
-- `app/static/img/landing.png` - página principal;
-- `app/static/img/login.png` - tela de login para acessar o aplicativo;
-- `app/static/img/register.png` - tela de registro de novos usuários;
-- `app/static/img/form.png` - formulário para inserção do email a ser classificado;
--- `app/static/img/feedback.png` - tela de feedback gerado pela IA;
-- `app/static/img/classifier.png` - histórico de classificações (lista/tablea);
+### Página Principal
+![Página Principal](app/static/img/landing.png)
+
+### Tela de Login
+![Tela de Login](app/static/img/login.png)
+
+### Registro de Novos Usuários
+![Registro](app/static/img/register.png)
+
+### Formulário de Classificação
+![Formulário](app/static/img/form.png)
+
+### Feedback da IA
+![Feedback](app/static/img/feedback.png)
+
+### Histórico de Classificações
+![Histórico](app/static/img/classifier.png)
 
 ---
 
