@@ -22,7 +22,22 @@
 
 ---
 
-## 📋 Objetivo do Projeto
+## � Prints / Imagens
+
+Pequena referência dos screenshots usados na documentação e no manual do usuário:
+
+- `app/static/img/landing.png` - página principal;
+- `app/static/img/login.png` - tela de login para acessar o aplicativo;
+- `app/static/img/register.png` - tela de registro de novos usuários;
+- `app/static/img/form.png` - formulário para inserção do email a ser classificado;
+-- `app/static/img/feedback.png` - tela de feedback gerado pela IA;
+- `app/static/img/classifier.png` - histórico de classificações (lista/tablea);
+
+---
+
+---
+
+## �📋 Objetivo do Projeto
 
 O **Email Classifier** é uma solução digital desenvolvida para empresas que lidam com alto volume de emails diariamente. O sistema utiliza **Inteligência Artificial** para automatizar a leitura, classificação e sugestão de respostas para emails, liberando tempo valioso da equipe para atividades mais estratégicas.
 
@@ -739,8 +754,8 @@ Este projeto está licenciado sob a licença MIT. Veja o arquivo `LICENSE` para 
 
 **Otto Fernandes**
 - GitHub: [@OttoF77](https://github.com/OttoF77)
-- LinkedIn: [Otto Fernandes](https://linkedin.com/in/otto-fernandes)
-- Email: otto.fernandes@email.com
+- LinkedIn: [Otto Fernandes](https://www.linkedin.com/in/otto-freitag-60912031/)
+- Email: ottodsf@gmail.com
 
 ---
 
